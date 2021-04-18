@@ -23,9 +23,9 @@ public class UserController {
     }
 
 
-   /* @GetMapping // alla users
-    public List<UserResponseModel> getUsers() { // id som kommer in från getMapping ovan mappas in till pathvariable id i parametern!
-        List<UserDto> userDtos = userService.getUsers();
+   @GetMapping // alla users
+   public List<UserResponseModel> getUsers() { // id som kommer in från getMapping ovan mappas in till pathvariable id i parametern!
+        List<UserDto> userDtos = userService.getProducts();
         ArrayList<UserResponseModel> responseList = new ArrayList<>();
         for (UserDto userDto : userDtos) {
             UserResponseModel responseModel = new UserResponseModel();
@@ -33,7 +33,7 @@ public class UserController {
             responseList.add(responseModel);
         }
         return responseList;
-    }*/
+    }
 
 /*
     @GetMapping("/{id}") // http://localhost:8080/users/[B@3ec8351b

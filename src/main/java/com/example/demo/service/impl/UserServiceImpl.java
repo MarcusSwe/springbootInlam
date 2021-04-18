@@ -40,9 +40,9 @@ public class UserServiceImpl implements UserService {
         }); // ovan gör man om optional UserEntity till optional UserDto..
     }*/
 
-    /*
+
     @Override
-    public List<UserDto> getUsers() {
+    public List<UserDto> getProducts() {
         Iterable<UserEntity> userEntities = userRepository.findAll();
         ArrayList<UserDto> userDtos = new ArrayList<>();
         for (UserEntity userEntity : userEntities){
@@ -51,21 +51,15 @@ public class UserServiceImpl implements UserService {
             userDtos.add(userDto);
         }
         return userDtos;
-    }*/
+    }
 
-    @Override
+
     public UserDto createProduct(UserDto userDetailsIn) {
         if (userDetailsIn.getName().equals("") ||
                 ((userDetailsIn.getCost() < 1)) ||
                 userDetailsIn.getCategory().equals("")
                 ){
             throw new RuntimeException("You dit not provide all info or wrong info");
-        }
-
-
-        Optional<UserEntity> checkProductEntity = userRepository.findByproductId(userDetailsIn.getProductId());
-        if (checkProductEntity.isPresent()) {
-            throw new RuntimeException("Product already exists");
         }
 
         UserEntity userEntity = new UserEntity();
