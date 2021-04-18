@@ -35,19 +35,19 @@ public class UserController {
         return responseList;
     }
 
-/*
-    @GetMapping("/{id}") // http://localhost:8080/users/[B@3ec8351b
-    public UserResponseModel getUser(@PathVariable String id) { // id som kommer in från getMapping ovan mappas in till pathvariable id i parametern!
+
+  @GetMapping("/{id}") // http://localhost:8080/users/[B@3ec8351b
+  public UserResponseModel getUser(@PathVariable String id) { // id som kommer in från getMapping ovan mappas in till pathvariable id i parametern!
         UserResponseModel responseModel = new UserResponseModel();
-        Optional<UserDto> optionalUserDto = userService.getUserById(id);
+        Optional<UserDto> optionalUserDto = userService.getProductById(id);
         if (optionalUserDto.isPresent()) {
             UserDto userDto = optionalUserDto.get();
             BeanUtils.copyProperties(userDto, responseModel);
             return responseModel;
         }
-        throw new RuntimeException("No user with id " + id);
+        throw new RuntimeException("No product with id " + id);
         //return userService.getUser();
-    }*/
+    }
 
     @PostMapping
     public UserResponseModel createProduct(@RequestBody UserDetailsRequestModel userDetailsModel) {

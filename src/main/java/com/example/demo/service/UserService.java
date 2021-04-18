@@ -11,9 +11,9 @@ public interface UserService {
 
   /*  Optional<UserDto> updateProduct(String id, UserDto userDto);
 
-    boolean deleteProduct(String id);
+    boolean deleteProduct(String id);*/
 
-    Optional<UserDto> getProductById(String id);*/
+    Optional<UserDto> getProductById(String id);
 
     List<UserDto> getProducts();
 

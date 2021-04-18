@@ -31,14 +31,14 @@ public class UserServiceImpl implements UserService {
         return "getUser";
     }*/
 
-    /*public Optional<UserDto> getUserById(String id){
-        Optional<UserEntity> userIdEntity = userRepository.findByUserId(id);
+    public Optional<UserDto> getProductById(String id){
+        Optional<UserEntity> userIdEntity = userRepository.findByproductId(id);
         return userIdEntity.map(userEntity -> {
             UserDto userDto = new UserDto();
             BeanUtils.copyProperties(userEntity, userDto);
             return userDto;
         }); // ovan gör man om optional UserEntity till optional UserDto..
-    }*/
+    }
 
 
     @Override
