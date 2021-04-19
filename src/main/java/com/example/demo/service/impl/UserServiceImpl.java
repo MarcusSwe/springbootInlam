@@ -76,9 +76,9 @@ public class UserServiceImpl implements UserService {
         return userDtoOut;
     }
 
-    /*
-    public Optional<UserDto> updateUser(String id, UserDto userDto) { //userDto är Json
-        Optional<UserEntity> userIdEntity = userRepository.findByUserId(id);
+
+    public Optional<UserDto> updateProduct(String id, UserDto userDto) { //userDto är Json
+        Optional<UserEntity> userIdEntity = userRepository.findByproductId(id);
         if (userIdEntity.isEmpty())
             return Optional.empty(); //java kommer tolka det som ett optional UserDto automatiskt..
         return userIdEntity.map(userEntity -> {
@@ -87,20 +87,20 @@ public class UserServiceImpl implements UserService {
             // ändrar ovan..eftersom inputen kanske har null på vissa ställen.. tex man uppdaterar bara email då skickar man samtidigt med null på dem andra platserna..
             // istället kopierar över gamla entries så dem inte blir null ..
 
-            userEntity.setEncryptedPassword(userDto.getPassword() != null ? BCrypt.hashpw(userDto.getPassword(), BCrypt.gensalt(10)) : userEntity.getEncryptedPassword());
 
-            userEntity.setUserId(userDto.getUserId() != null ? util.generatedHash(userDto.getEmail()).substring(3) : userEntity.getUserId());
 
-            userEntity.setFirstName(userDto.getFirstName() != null ? userDto.getFirstName() : userEntity.getFirstName());
-            userEntity.setLastName(userDto.getLastName() != null ? userDto.getLastName() : userEntity.getLastName());
-            userEntity.setEmail(userDto.getEmail() != null ? userDto.getEmail() : userEntity.getEmail());
+            userEntity.setProductId(userDto.getProductId() != null ? util.generatedHash(userDto.getName()).substring(3) : userEntity.getProductId());
+
+            userEntity.setName(userDto.getName() != null ? userDto.getName() : userEntity.getName());
+            userEntity.setCost(userDto.getCost() >= 1 ? userDto.getCost() : userEntity.getCost());
+            userEntity.setCategory(userDto.getCategory() != null ? userDto.getCategory() : userEntity.getCategory());
 
 
             UserEntity updatedUserEntity = userRepository.save(userEntity); //save har inte vi gjort..kommer från CrudRepository..
             BeanUtils.copyProperties(updatedUserEntity, response);
             return response;
         }); //userEntity är rad i databasen..
-    }*/
+    }
 
     /*
     @Transactional

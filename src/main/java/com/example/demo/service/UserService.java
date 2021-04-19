@@ -9,9 +9,9 @@ public interface UserService {
 
     UserDto createProduct(UserDto productDetails);
 
-  /*  Optional<UserDto> updateProduct(String id, UserDto userDto);
+    Optional<UserDto> updateProduct(String id, UserDto userDto);
 
-    boolean deleteProduct(String id);*/
+    /*  boolean deleteProduct(String id);*/
 
     Optional<UserDto> getProductById(String id);
 

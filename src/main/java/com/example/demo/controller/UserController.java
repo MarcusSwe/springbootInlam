@@ -64,15 +64,15 @@ public class UserController {
         return response;
     }
 
-    /*
+
     @PutMapping("/{id}")
-    public UserResponseModel updateUser(@PathVariable String id, @RequestBody UserDetailsRequestModel requestData) {
+    public UserResponseModel updateProduct(@PathVariable String id, @RequestBody UserDetailsRequestModel requestData) {
         // copy json to dto in, requestData är Json
         UserDto userDtoIn = new UserDto();
         BeanUtils.copyProperties(requestData, userDtoIn);
 
         // pass dto in to service layer
-        Optional<UserDto> userDtoOut = userService.updateUser(id, userDtoIn);
+        Optional<UserDto> userDtoOut = userService.updateProduct(id, userDtoIn);
         if (userDtoOut.isEmpty()) {
             throw new RuntimeException("Not found");
         }
@@ -84,6 +84,7 @@ public class UserController {
         return responseModel;
     }
 
+    /*
     @DeleteMapping("/{id}")
     public String deleteUser(@PathVariable String id) {
         boolean deleted = userService.deleteUser(id);
