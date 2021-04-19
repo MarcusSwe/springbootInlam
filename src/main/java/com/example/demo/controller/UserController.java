@@ -84,14 +84,14 @@ public class UserController {
         return responseModel;
     }
 
-    /*
+
     @DeleteMapping("/{id}")
-    public String deleteUser(@PathVariable String id) {
-        boolean deleted = userService.deleteUser(id);
+    public String removeProduct(@PathVariable String id) {
+        boolean deleted = userService.removeProduct(id);
         if (deleted) {
             return "";
         }
-        throw new RuntimeException("No user with id " + id);
+        throw new RuntimeException("No product with id " + id);
 
-    } */
+    }
 }

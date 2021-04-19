@@ -11,7 +11,7 @@ public interface UserService {
 
     Optional<UserDto> updateProduct(String id, UserDto userDto);
 
-    /*  boolean deleteProduct(String id);*/
+    boolean removeProduct(String id);
 
     Optional<UserDto> getProductById(String id);
 

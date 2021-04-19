@@ -102,10 +102,10 @@ public class UserServiceImpl implements UserService {
         }); //userEntity är rad i databasen..
     }
 
-    /*
+
     @Transactional
-    public boolean deleteUser(String id) {
-        long removedUsersCount = userRepository.deleteByUserId(id);
+    public boolean removeProduct(String id) {
+        long removedUsersCount = userRepository.deleteByproductId(id);
         return removedUsersCount > 0;
-    }*/
+    }
 }
