@@ -5,6 +5,7 @@ import com.example.demo.model.response.UserResponseModel;
 import com.example.demo.service.UserService;
 import com.example.demo.shared.dto.UserDto;
 import org.springframework.beans.BeanUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,8 +29,8 @@ public class UserController {
     }
 
 
-   @GetMapping // alla users
-   public List<UserResponseModel> getUsers() {
+   @GetMapping
+   public ResponseEntity<List<UserResponseModel>> getProducts() {
         List<UserDto> userDtos = userService.getProducts();
         ArrayList<UserResponseModel> responseList = new ArrayList<>();
 
@@ -41,26 +42,25 @@ public class UserController {
                BeanUtils.copyProperties(userDto, responseModel);
                responseList.add(responseModel);
            }
-           return responseList;
+           return ResponseEntity.ok(responseList);
        }
     }
 
 
   @GetMapping("/{id}")
-  public UserResponseModel getUser(@PathVariable String id) {
+  public ResponseEntity<UserResponseModel> getProduct(@PathVariable String id) {
         UserResponseModel responseModel = new UserResponseModel();
         Optional<UserDto> optionalUserDto = userService.getProductById(id);
         if (optionalUserDto.isPresent()) {
             UserDto userDto = optionalUserDto.get();
             BeanUtils.copyProperties(userDto, responseModel);
-            return responseModel;
+            return ResponseEntity.ok(responseModel);
         }
         throw new NotFoundException("404 Not Found");
-        //return userService.getUser();
     }
 
     @PostMapping
-    public UserResponseModel createProduct(@RequestBody UserDetailsRequestModel userDetailsModel) {
+    public ResponseEntity<UserResponseModel> createProduct(@RequestBody UserDetailsRequestModel userDetailsModel) {
         UserDto userDtoIn = new UserDto();
         BeanUtils.copyProperties(userDetailsModel, userDtoIn);
 
@@ -70,36 +70,33 @@ public class UserController {
             UserDto userDtoOut = userService.createProduct(userDtoIn);
             UserResponseModel response = new UserResponseModel();
             BeanUtils.copyProperties(userDtoOut, response);
-            return response;
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
         }
     }
 
 
     @PutMapping("/{id}")
-    public UserResponseModel updateProduct(@PathVariable String id, @RequestBody UserDetailsRequestModel requestData) {
-        // copy json to dto in, requestData är Json
+    public ResponseEntity<UserResponseModel> updateProduct(@PathVariable String id, @RequestBody UserDetailsRequestModel requestData) {
+
         UserDto userDtoIn = new UserDto();
         BeanUtils.copyProperties(requestData, userDtoIn);
 
-        // pass dto in to service layer
         Optional<UserDto> userDtoOut = userService.updateProduct(id, userDtoIn);
         if (userDtoOut.isEmpty()) {
             throw new NotFoundException("404 Not Found");
         }
-
-
         UserDto userDto = userDtoOut.get();
         UserResponseModel responseModel = new UserResponseModel();
         BeanUtils.copyProperties(userDto, responseModel);
-        return responseModel;
+        return ResponseEntity.ok(responseModel);
     }
 
 
     @DeleteMapping("/{id}")
-    public String removeProduct(@PathVariable String id) {
+    public ResponseEntity<String> removeProduct(@PathVariable String id) {
         boolean deleted = userService.removeProduct(id);
         if (deleted) {
-            return "";
+            return ResponseEntity.ok("");
         }
         throw new NotFoundException("404 Not Found");
 
