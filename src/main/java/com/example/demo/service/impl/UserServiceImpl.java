@@ -1,5 +1,6 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.exception.BadRequestException;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.entity.UserEntity;
 import com.example.demo.service.UserService;
@@ -37,7 +38,7 @@ public class UserServiceImpl implements UserService {
             UserDto userDto = new UserDto();
             BeanUtils.copyProperties(userEntity, userDto);
             return userDto;
-        }); // ovan gör man om optional UserEntity till optional UserDto..
+        });
     }
 
 
@@ -59,7 +60,7 @@ public class UserServiceImpl implements UserService {
                 ((userDetailsIn.getCost() < 1)) ||
                 userDetailsIn.getCategory().equals("")
                 ){
-            throw new RuntimeException("You dit not provide all info or wrong info");
+            throw new BadRequestException("404 You dit not provide all info or wrong info");
         }
 
         UserEntity userEntity = new UserEntity();
@@ -68,26 +69,21 @@ public class UserServiceImpl implements UserService {
 
         String userId = util.generatedHash(userDetailsIn.getName());
 
-        userEntity.setProductId(userId.substring(3)); // ta bort 3 första tecknen på user id som generas av mailen..special tecken som inte verkas gilla..
+        userEntity.setProductId(userId.substring(3));
 
-        UserEntity userEntityOut = userRepository.save(userEntity); // detta sparar till databasen..
+        UserEntity userEntityOut = userRepository.save(userEntity);
         UserDto userDtoOut = new UserDto();
         BeanUtils.copyProperties(userEntityOut, userDtoOut);
         return userDtoOut;
     }
 
 
-    public Optional<UserDto> updateProduct(String id, UserDto userDto) { //userDto är Json
+    public Optional<UserDto> updateProduct(String id, UserDto userDto) {
         Optional<UserEntity> userIdEntity = userRepository.findByproductId(id);
         if (userIdEntity.isEmpty())
-            return Optional.empty(); //java kommer tolka det som ett optional UserDto automatiskt..
+            return Optional.empty();
         return userIdEntity.map(userEntity -> {
             UserDto response = new UserDto();
-           // BeanUtils.copyProperties(userDto, userEntity); // updaterar här..kopierar över data från Json till raden i databasen..så detta ändrar saker i databasen..
-            // ändrar ovan..eftersom inputen kanske har null på vissa ställen.. tex man uppdaterar bara email då skickar man samtidigt med null på dem andra platserna..
-            // istället kopierar över gamla entries så dem inte blir null ..
-
-
 
             userEntity.setProductId(userDto.getProductId() != null ? util.generatedHash(userDto.getName()).substring(3) : userEntity.getProductId());
 
@@ -96,10 +92,10 @@ public class UserServiceImpl implements UserService {
             userEntity.setCategory(userDto.getCategory() != null ? userDto.getCategory() : userEntity.getCategory());
 
 
-            UserEntity updatedUserEntity = userRepository.save(userEntity); //save har inte vi gjort..kommer från CrudRepository..
+            UserEntity updatedUserEntity = userRepository.save(userEntity);
             BeanUtils.copyProperties(updatedUserEntity, response);
             return response;
-        }); //userEntity är rad i databasen..
+        });
     }
 
 

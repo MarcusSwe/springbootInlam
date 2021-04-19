@@ -9,8 +9,7 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends CrudRepository<UserEntity, Long> {
 
-    Optional<UserEntity> findByproductId(String id); //ska matcha kolumn namnet i tabellen och då under UserEntity.java..alltså "findBy"+"UserId" i ett namn tex..
+    Optional<UserEntity> findByproductId(String id);
     Long deleteByproductId(String id);
 
-
-} // extends .. får man tillgång till CrudRepository
+}

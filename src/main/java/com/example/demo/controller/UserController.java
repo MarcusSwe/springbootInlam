@@ -5,7 +5,12 @@ import com.example.demo.model.response.UserResponseModel;
 import com.example.demo.service.UserService;
 import com.example.demo.shared.dto.UserDto;
 import org.springframework.beans.BeanUtils;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import com.example.demo.exception.NotFoundException;
+import com.example.demo.exception.BadRequestException;
+import com.example.demo.exception.NoContentException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,20 +29,25 @@ public class UserController {
 
 
    @GetMapping // alla users
-   public List<UserResponseModel> getUsers() { // id som kommer in från getMapping ovan mappas in till pathvariable id i parametern!
+   public List<UserResponseModel> getUsers() {
         List<UserDto> userDtos = userService.getProducts();
         ArrayList<UserResponseModel> responseList = new ArrayList<>();
-        for (UserDto userDto : userDtos) {
-            UserResponseModel responseModel = new UserResponseModel();
-            BeanUtils.copyProperties(userDto, responseModel);
-            responseList.add(responseModel);
-        }
-        return responseList;
+
+       if (userDtos.isEmpty()) {
+           throw new NoContentException("204 No Content");
+       } else {
+           for (UserDto userDto : userDtos) {
+               UserResponseModel responseModel = new UserResponseModel();
+               BeanUtils.copyProperties(userDto, responseModel);
+               responseList.add(responseModel);
+           }
+           return responseList;
+       }
     }
 
 
-  @GetMapping("/{id}") // http://localhost:8080/users/[B@3ec8351b
-  public UserResponseModel getUser(@PathVariable String id) { // id som kommer in från getMapping ovan mappas in till pathvariable id i parametern!
+  @GetMapping("/{id}")
+  public UserResponseModel getUser(@PathVariable String id) {
         UserResponseModel responseModel = new UserResponseModel();
         Optional<UserDto> optionalUserDto = userService.getProductById(id);
         if (optionalUserDto.isPresent()) {
@@ -45,23 +55,23 @@ public class UserController {
             BeanUtils.copyProperties(userDto, responseModel);
             return responseModel;
         }
-        throw new RuntimeException("No product with id " + id);
+        throw new NotFoundException("404 Not Found");
         //return userService.getUser();
     }
 
     @PostMapping
     public UserResponseModel createProduct(@RequestBody UserDetailsRequestModel userDetailsModel) {
-        // copy json to dto in
         UserDto userDtoIn = new UserDto();
         BeanUtils.copyProperties(userDetailsModel, userDtoIn);
 
-        // pass dto in to service layer
-        UserDto userDtoOut = userService.createProduct(userDtoIn);
-
-        // copy dto out from service layer to repsonse
-        UserResponseModel response = new UserResponseModel();
-        BeanUtils.copyProperties(userDtoOut, response);
-        return response;
+        if (userDetailsModel.getName().equals("") || userDetailsModel.getCategory().equals("") || userDetailsModel.getCost()<1) {
+            throw new BadRequestException("400 Bad Request");
+        } else {
+            UserDto userDtoOut = userService.createProduct(userDtoIn);
+            UserResponseModel response = new UserResponseModel();
+            BeanUtils.copyProperties(userDtoOut, response);
+            return response;
+        }
     }
 
 
@@ -74,7 +84,7 @@ public class UserController {
         // pass dto in to service layer
         Optional<UserDto> userDtoOut = userService.updateProduct(id, userDtoIn);
         if (userDtoOut.isEmpty()) {
-            throw new RuntimeException("Not found");
+            throw new NotFoundException("404 Not Found");
         }
 
 
@@ -91,7 +101,7 @@ public class UserController {
         if (deleted) {
             return "";
         }
-        throw new RuntimeException("No product with id " + id);
+        throw new NotFoundException("404 Not Found");
 
     }
 }
